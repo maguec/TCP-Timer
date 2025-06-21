@@ -16,11 +16,12 @@ uv run main.py --pcap-file stream1.pcap --client-ip 10.11.3.5
 ### Script returns 
 
 
-|Field|Description|
+
+| Field | Description |
 |--|--|
-|Time(ms)|Elapsed Time of the request/response cycle|
-|Bytes|Predicted bytes of each response frame summed|
-|Packets|The number of packets in the response|
+| Time(ms) | Elapsed Time of the request/response cycle |
+| Bytes | Predicted bytes of each response frame summed |
+| Packets | The number of packets in the response |
 
 
 ```bash
