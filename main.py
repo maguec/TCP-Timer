@@ -12,6 +12,7 @@ def main(pcap_file, client_ip):
     last_time = 0
     byte_count = 0
     response_packets = 0
+    print("Time(ms)", "Bytes", "Packets")
 
     for i, pkt in enumerate(packets):
         # skip any no checkable packets
@@ -26,7 +27,8 @@ def main(pcap_file, client_ip):
         if pkt[IP].dst != client_ip and in_request:
             elapsed = round((last_time - start_time) * 1000, 2)
             if response_packets > 1 and byte_count > 105:
-                print(pkt[IP].src, pkt[IP].dst, elapsed, byte_count, response_packets)
+                #print(pkt[IP].src, pkt[IP].dst, elapsed, byte_count, response_packets)
+                print(elapsed, byte_count, response_packets)
             start_time = 0
             last_time = 0
             byte_count = 0
