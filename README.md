@@ -4,15 +4,29 @@
 ### Break out each session into it's own file
 
 ```bash
-tshark -r my.pcap -Y "tcp.stream eq 10" -w stream10.pcap
+tshark -r my.pcap -Y "tcp.stream eq 1" -w stream1.pcap
 ```
 
 ### Specify the Client IP
 
 ```bash
-uv run main.py --client-ip 192.168.0.1
+uv run main.py --pcap-file stream1.pcap --client-ip 10.11.3.5
 ```
 
+### Script returns 
 
 
+|Field|Description|
+|--|--|
+|Time(ms)|Elapsed Time of the request/response cycle|
+|Bytes|Predicted bytes of each response frame summed|
+|Packets|The number of packets in the response|
 
+
+```bash
+Time(ms) Bytes Packets
+0.38 82861 7
+0.22 1929 2
+0.88 381541 13
+1.42 536468 49
+```
