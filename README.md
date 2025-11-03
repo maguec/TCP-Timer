@@ -25,7 +25,6 @@ uv run main.py --pcap-file stream1.pcap --client-ip 10.11.3.5
 
 
 ```bash
-```
 ╒════════════╤═════════╤═══════════╕
 │   Time(ms) │   Bytes │   Packets │
 ╞════════════╪═════════╪═══════════╡
