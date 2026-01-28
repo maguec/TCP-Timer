@@ -14,7 +14,7 @@ def main(pcap_file, client_ip, tableformat):
     last_time = 0
     byte_count = 0
     response_packets = 0
-    header = ["Time(ms)", "Bytes", "Packets", "ServerIP", "ServerPort"]
+    header = ["Time_ms", "Bytes", "Packets", "ServerIP", "ServerPort"]
     data = []
 
     for i, pkt in enumerate(packets):
