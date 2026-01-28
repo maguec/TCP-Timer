@@ -3,7 +3,7 @@ import argparse
 from tabulate import tabulate
 
 
-def main(pcap_file, client_ip, tableformat):
+def main(pcap_file, client_ip, tableformat, filter):
     try:
         packets = rdpcap(pcap_file)
     except Exception as e:
@@ -14,8 +14,9 @@ def main(pcap_file, client_ip, tableformat):
     last_time = 0
     byte_count = 0
     response_packets = 0
-    header = ["Time_ms", "Bytes", "Packets", "ServerIP", "ServerPort"]
+    header = ["time_ms", "bytes", "packets", "server_ip", "server_port", "offset"]
     data = []
+    offset = 0
 
     for i, pkt in enumerate(packets):
         # skip any no checkable packets
@@ -31,15 +32,17 @@ def main(pcap_file, client_ip, tableformat):
             elapsed = round((last_time - start_time) * 1000, 2)
             if response_packets > 1 and byte_count > 105:
                 # print(pkt[IP].src, pkt[IP].dst, elapsed, byte_count, response_packets)
-                data.append(
-                    [
-                        elapsed,
-                        byte_count,
-                        response_packets,
-                        pkt[IP].dst,
-                        pkt[TCP].dport,
-                    ]
-                )
+                if elapsed >= float(filter):
+                    data.append(
+                        [
+                            elapsed,
+                            byte_count,
+                            response_packets,
+                            pkt[IP].dst,
+                            pkt[TCP].dport,
+                            offset,
+                        ]
+                    )
             start_time = 0
             last_time = 0
             byte_count = 0
@@ -50,6 +53,8 @@ def main(pcap_file, client_ip, tableformat):
             in_request = True
             start_time = float(pkt.time)
             last_time = float(pkt.time)
+
+        offset += 1
     # print(tabulate(data, headers=header, tablefmt="fancy_grid"))
     print(tabulate(data, headers=header, tablefmt=tableformat))
 
@@ -62,10 +67,16 @@ if __name__ == "__main__":
     parser.add_argument("--pcap-file", help="The pcap file", required=True)
     parser.add_argument("--client-ip", help="The client ip address", required=True)
     parser.add_argument(
+        "--filter",
+        help="If greater than or equal to this value keep packet otherwise discard",
+        required=False,
+        default=0.0,
+    )
+    parser.add_argument(
         "--format",
         help="The output format fancy_grid or tsv default is fancy_grid",
         required=False,
         default="fancy_grid",
     )
     args = parser.parse_args()
-    main(args.pcap_file, args.client_ip, args.format)
+    main(args.pcap_file, args.client_ip, args.format, args.filter)
