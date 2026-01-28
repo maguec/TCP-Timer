@@ -14,7 +14,7 @@ def main(pcap_file, client_ip, tableformat):
     last_time = 0
     byte_count = 0
     response_packets = 0
-    header = ["Time(ms)", "Bytes", "Packets"]
+    header = ["Time(ms)", "Bytes", "Packets", "ServerIP", "ServerPort"]
     data = []
 
     for i, pkt in enumerate(packets):
@@ -31,7 +31,15 @@ def main(pcap_file, client_ip, tableformat):
             elapsed = round((last_time - start_time) * 1000, 2)
             if response_packets > 1 and byte_count > 105:
                 # print(pkt[IP].src, pkt[IP].dst, elapsed, byte_count, response_packets)
-                data.append([elapsed, byte_count, response_packets])
+                data.append(
+                    [
+                        elapsed,
+                        byte_count,
+                        response_packets,
+                        pkt[IP].dst,
+                        pkt[TCP].dport,
+                    ]
+                )
             start_time = 0
             last_time = 0
             byte_count = 0
