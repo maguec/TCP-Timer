@@ -4,7 +4,12 @@
 ### Break out each session into it's own file
 
 ```bash
-tshark -r my.pcap -Y "tcp.stream eq 1" -w stream1.pcap
+for file in `ls *.pcap`; do
+  echo "File: ${file}"
+  for stream in $(tshark -r $file -T fields -e tcp.stream | sort -n | uniq); do
+      tshark -r $file -Y "tcp.stream eq $stream" -w "streams_${file}_stream_$stream.pcap"
+  done
+done
 ```
 
 ### Specify the Client IP

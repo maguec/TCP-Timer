@@ -3,7 +3,7 @@ import argparse
 from tabulate import tabulate
 
 
-def main(pcap_file, client_ip):
+def main(pcap_file, client_ip, tableformat):
     try:
         packets = rdpcap(pcap_file)
     except Exception as e:
@@ -42,7 +42,8 @@ def main(pcap_file, client_ip):
             in_request = True
             start_time = float(pkt.time)
             last_time = float(pkt.time)
-    print(tabulate(data, headers=header, tablefmt="fancy_grid"))
+    # print(tabulate(data, headers=header, tablefmt="fancy_grid"))
+    print(tabulate(data, headers=header, tablefmt=tableformat))
 
 
 if __name__ == "__main__":
@@ -52,5 +53,11 @@ if __name__ == "__main__":
     )
     parser.add_argument("--pcap-file", help="The pcap file", required=True)
     parser.add_argument("--client-ip", help="The client ip address", required=True)
+    parser.add_argument(
+        "--format",
+        help="The output format fancy_grid or tsv default is fancy_grid",
+        required=False,
+        default="fancy_grid",
+    )
     args = parser.parse_args()
-    main(args.pcap_file, args.client_ip)
+    main(args.pcap_file, args.client_ip, args.format)
